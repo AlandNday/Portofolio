@@ -23,12 +23,14 @@ class EducationController extends Controller
         $request->validate([
             'school_name' => 'required|string|max:255',
             'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
+            'location' => 'required|string|max:255', 
+            'gpa' => 'string|max:255', 
+            'end_date' => 'date|after_or_equal:start_date',
             'major' => 'required|string|max:255',
         ]);
 
         Education::create($request->all());
-        return redirect('/')->with('success', 'Education record created successfully.');
+        return redirect('/#education')->with('success', 'Education record created successfully.');
     }
 
     public function edit(Education $education)
@@ -46,12 +48,12 @@ class EducationController extends Controller
         ]);
 
         $education->update($request->all());
-        return redirect()->route('Educations.index')->with('success', 'Education record updated successfully.');
+        return redirect('/#education')->with('success', 'Education record updated successfully.');
     }
 
-    public function destroy(Education $education)
+    public function destroy($id)
     {
-        $education->delete();
-        return redirect()->route('Educations.index')->with('success', 'Education record deleted successfully.');
+        \DB::table('educations')->where('id', $id)->delete();
+        return redirect('/#education')->with('success', 'Deleted!');
     }
 }

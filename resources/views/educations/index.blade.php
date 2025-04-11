@@ -91,8 +91,9 @@
         <i class="fas fa-plus"></i> Add Education
     </button>
 
-    <div id="educationModal" class="modal">
 
+    <div id="educationModal" class="modal">
+        <!-- Modal content -->
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h2>Add Education</h2>

@@ -47,12 +47,11 @@
                         Jalan Herewila Gang 17 no.1, Kota Kupang, NTT, 85118 · 081393311179 ·
                         <a href="mailto:name@email.com">alandnday12@gmail.com</a>
                     </div>
-                    <p class="lead mb-5">A mobile front-end developer with practical experience in UI development and a solid understanding of Scrum principles. While I'm on a continuous learning journey and consider myself, I'm dedicated to improving my skills and contributing effectively to agile development teams. I have experience working with flutter, and I'm committed to delivering functional and user-friendly mobile interfaces. </p>
+                    <p class="lead mb-5">A mobile front-end developer with practical experience in UI development and a solid understanding of Scrum principles. While I'm on a continuous learning journey and consider myself to still have a lot to learn, I'm dedicated to improving my skills and contributing effectively to development teams. I have experience working with flutter, and I'm committed to delivering functional and user-friendly interfaces. </p>
                     <div class="social-icons">
-                        <a class="social-icon" href="#!"><i class="fab fa-linkedin-in"></i></a>
-                        <a class="social-icon" href="#!"><i class="fab fa-github"></i></a>
-                        <a class="social-icon" href="#!"><i class="fab fa-twitter"></i></a>
-                        <a class="social-icon" href="#!"><i class="fab fa-facebook-f"></i></a>
+                        <a class="social-icon" href="https://www.linkedin.com/feed"><i class="fab fa-linkedin-in"></i></a>
+                        <a class="social-icon" href="https://github.com/AlandNday"><i class="fab fa-github"></i></a>
+    
                     </div>
                 </div>
             </section>
@@ -69,6 +68,9 @@
                         </div>
                         <div class="flex-shrink-0"><span class="text-primary">february 2024 - february 2025</span></div>
                     </div>
+
+
+
             </section>
             <hr class="m-0" />
             <div class="modal fade" id="educationModal" tabindex="-1" aria-labelledby="educationModalLabel" aria-hidden="true">
@@ -79,25 +81,35 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+            <h2>Add Education</h2>
                 <form id="educationForm" action="{{ route('Educations.store') }}" method="POST">
                     @csrf
                     <div class="mb-3">
                         <label for="school_name" class="form-label">School Name</label>
-                        <input type="text" class="form-control" id="school_name" name="school_name" required>
+                        <input type="text" id="school_name" name="school_name" required><br><br>
                     </div>
                     <div class="mb-3">
-                        <label for="degree" class="form-label">Degree</label>
-                        <input type="text" class="form-control" id="degree" name="degree" required>
+                        <label for="Major" class="form-label">Degree</label>
+                        <input type="text" id="major" name="major" required><br><br>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="location" class="form-label">location</label>
+                        <input type="text" id="location" name="location" required><br><br>
+                    </div>
+                    <div class="mb-3">
+                        <label for="gpa" class="form-label">GPA</label>
+                        <input type="text" id="gpa" name="gpa" required><br><br>
                     </div>
                     <div class="mb-3">
                         <label for="start_date" class="form-label">Start Date</label>
-                        <input type="date" class="form-control" id="start_date" name="start_date" required>
+                        <input type="date" id="start_date" name="start_date" required><br><br>
                     </div>
                     <div class="mb-3">
                         <label for="end_date" class="form-label">End Date (Optional)</label>
-                        <input type="date" class="form-control" id="end_date" name="end_date">
-                    </div>
+                        <input type="date" id="end_date" name="end_date"required><br><br>
                     <button type="submit" class="btn btn-primary">Save Education</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -108,28 +120,38 @@
             <section class="resume-section" id="education">
                 <div class="resume-section-content">
                     <h2 class="mb-3">Education</h2>
-                    <button type="button" class="btn btn-success mb-2" data-bs-toggle="modal" data-bs-target="#educationModal">
+                    <button type="button" class="btn btn-success mb-5" data-bs-toggle="modal" data-bs-target="#educationModal">
     Add Education
 </button>
-                    <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
-                        <div class="flex-grow-1">
-                            <h3 class="mb-0">Bina Nusantara University</h3>
-                            <div class="subheading mb-3">Bachelor of Computer Science</div>
-                            <div>Computer Science</div>
-                            <p>Current GPA: 3.4</p>
-                            
-                        </div>
-                        <div class="flex-shrink-0"><span class="text-primary">2021 - Present</span></div>
-                    </div>
-                    <div class="d-flex flex-column flex-md-row justify-content-between">
-                        <div class="flex-grow-1">
-                            <h3 class="mb-0"> St. Albertus High School(dempo)</h3>
-                            <div class="subheading mb-3">Science major
-                            </div>
-                        </div>
-                        <div class="flex-shrink-0"><span class="text-primary">2018 - 2021</span></div>
-                    </div>
-                </div>
+                    @foreach ($educations as $education)
+    <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+        <div class="flex-grow-1">
+            <h3 class="mb-1">{{ $education->school_name }}</h3>
+            <h5>{{ $education->major }}</h5>
+            <h6>{{ $education->location }}</h6>
+            <div>Current GPA : {{ $education->gpa }}</div> {{-- Assuming you have a 'field_of_study' column --}}
+        </div>
+        <div class="flex-shrink-0">
+    <span class="text-primary">
+        {{ date('M Y', strtotime($education->start_date)) }} - 
+        {{ $education->end_date ? date('M Y', strtotime($education->end_date)) : 'Present' }}
+    </span>
+
+                        <form action="{{ route('Educations.destroy', $education) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <div style="text-align: right;">
+    <button type="submit" onclick="return confirm('Are you sure you want to delete this record?');" style="background: none; border: none; padding: 0; cursor: pointer;">
+        <i class="fas fa-trash-alt" style="color: red;"></i>
+    </button>
+                        </form>
+    
+</div>
+</div>
+
+
+    </div>
+@endforeach
                 
             </section>
             <hr class="m-0" />
@@ -145,25 +167,20 @@
                         <li class="list-inline-item"><i class="fab fa-html5"></i></li>
                         <li class="list-inline-item"><i class="fab fa-laravel"></i></li>
                     </ul>
-                    <div class="subheading mb-3">Workflow</div>
-                    <ul class="fa-ul mb-0">
-                        <li>
-                            <span class="fa-li"><i class="fas fa-check"></i></span>
-                            Mobile-First, Responsive Design
-                        </li>
-                        <li>
-                            <span class="fa-li"><i class="fas fa-check"></i></span>
-                            Cross Browser Testing & Debugging
-                        </li>
-                        <li>
-                            <span class="fa-li"><i class="fas fa-check"></i></span>
-                            Cross Functional Teams
-                        </li>
-                        <li>
-                            <span class="fa-li"><i class="fas fa-check"></i></span>
-                            Agile Development & Scrum
-                        </li>
-                    </ul>
+                    <div class="d-flex flex-column  justify-content-between mb-5">
+                        <div class="flex-grow-1">
+                            <h3 class="mb-2">Flutter</h3>
+                            <p>Over the past year, I've gained hands-on experience building Flutter applications from the ground up. I've tackled various projects, solidifying my understanding of widgets, state management, and API integration. I'm comfortable with the Flutter framework and have a proven ability to deliver functional apps. I recognize that Flutter is a rapidly evolving technology, and I'm eager to expand my knowledge and refine my skills further.</p>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h3 class="mb-0">HTML/CSS</h3>
+                            <p>I have a solid foundation in HTML and CSS, gained through practical application in college assignments. I'm comfortable with structuring web pages using HTML5 and styling them effectively with CSS. While my experience is rooted in academic projects, I'm eager to apply and expand these skills in real-world scenarios.</p>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h3 class="mb-0">Flutter</h3>
+                            <p>I have introductory experience with Laravel, primarily through college assignments. I've worked with the framework to build basic web applications, gaining familiarity with routing, controllers, and views. While my experience is primarily academic, I'm enthusiastic about learning more about Laravel and applying it in more complex projects</p>
+                        </div>
+                        
                 </div>
             </section>
             <hr class="m-0" />
@@ -171,55 +188,43 @@
             <section class="resume-section" id="interests">
                 <div class="resume-section-content">
                     <h2 class="mb-5">Interests</h2>
-                    <p>Apart from being a web developer, I enjoy most of my time being outdoors. In the winter, I am an avid skier and novice ice climber. During the warmer months here in Colorado, I enjoy mountain biking, free climbing, and kayaking.</p>
-                    <p class="mb-0">When forced indoors, I follow a number of sci-fi and fantasy genre movies and television shows, I am an aspiring chef, and I spend a large amount of my free time exploring the latest technology advancements in the front-end web development world.</p>
+                    <p>I enjoy most of my time free time being indoors. I like playing games, follow a number of sci-fi and fantasy genre movies and television shows, and I also spend my free time exploring the latest technology advancements in the world. </p>
+                    <p class="mb-0">I also spend a good amount of time cooking for myself, exploring new recipes and culinary techniques.</p>
                 </div>
             </section>
             <hr class="m-0" />
             <!-- Awards-->
             <section class="resume-section" id="awards">
                 <div class="resume-section-content">
-                    <h2 class="mb-5">Awards & Certifications</h2>
-                    <ul class="fa-ul mb-0">
-                        <li>
-                            <span class="fa-li"><i class="fas fa-trophy text-warning"></i></span>
-                            Google Analytics Certified Developer
-                        </li>
-                        <li>
-                            <span class="fa-li"><i class="fas fa-trophy text-warning"></i></span>
-                            Mobile Web Specialist - Google Certification
-                        </li>
-                        <li>
-                            <span class="fa-li"><i class="fas fa-trophy text-warning"></i></span>
-                            1
-                            <sup>st</sup>
-                            Place - University of Colorado Boulder - Emerging Tech Competition 2009
-                        </li>
-                        <li>
-                            <span class="fa-li"><i class="fas fa-trophy text-warning"></i></span>
-                            1
-                            <sup>st</sup>
-                            Place - University of Colorado Boulder - Adobe Creative Jam 2008 (UI Design Category)
-                        </li>
-                        <li>
-                            <span class="fa-li"><i class="fas fa-trophy text-warning"></i></span>
-                            2
-                            <sup>nd</sup>
-                            Place - University of Colorado Boulder - Emerging Tech Competition 2008
-                        </li>
-                        <li>
-                            <span class="fa-li"><i class="fas fa-trophy text-warning"></i></span>
-                            1
-                            <sup>st</sup>
-                            Place - James Buchanan High School - Hackathon 2006
-                        </li>
-                        <li>
-                            <span class="fa-li"><i class="fas fa-trophy text-warning"></i></span>
-                            3
-                            <sup>rd</sup>
-                            Place - James Buchanan High School - Hackathon 2005
-                        </li>
-                    </ul>
+                    <h2 class="mb-4">Certifications</h2>
+                        <h4 class="mb-3">   
+                        SIDIGS Internship Certificate
+                        </h4>
+                        <div>
+                        <style>
+  .photo-container {
+    width: 600px; /* Fixed container width */
+  }
+
+  .displayed-photo {
+    width: 100%;
+    display: block; /* Change from flex to block for left alignment */
+    height: 400px; /* Fixed height */
+    object-fit: contain; /* Maintain aspect ratio */
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+</style>
+</head>
+<body>
+    <div class="photo-container">
+        <!-- Replace "path/to/your/photo.jpg" with your actual local file path -->
+        <img src="{{ asset('/Foto/Sertifikatmagang.jpg') }}" alt="" class="displayed-photo">
+
+    </div>
+</body>
+
+                        </div>
                 </div>
             </section>
         </div>
